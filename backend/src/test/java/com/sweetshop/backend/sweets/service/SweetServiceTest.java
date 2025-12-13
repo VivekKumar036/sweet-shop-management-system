@@ -50,26 +50,31 @@ class SweetServiceTest {
     }
 
     @Test
-    void shouldReduceQuantityWhenSweetIsPurchased() {
+void shouldReduceQuantityWhenSweetIsPurchased() {
     Sweet sweet = new Sweet("Jalebi", "Indian", 12.0, 5);
 
-   when(sweetRepository.save(any(Sweet.class)))
-        .thenAnswer(invocation -> invocation.getArgument(0));
+    when(sweetRepository.findById(1L)).thenReturn(java.util.Optional.of(sweet));
+    when(sweetRepository.save(any(Sweet.class)))
+            .thenAnswer(invocation -> invocation.getArgument(0));
 
-
-    Sweet updatedSweet = sweetService.purchaseSweet(sweet, 2);
+    Sweet updatedSweet = sweetService.purchaseSweet(1L, 2);
 
     assertEquals(3, updatedSweet.getQuantityInStock());
 }
+
     @Test
-    void shouldThrowExceptionWhenStockIsInsufficient() {
-        Sweet sweet = new Sweet("Peda", "Indian", 25.0, 1);
+void shouldThrowExceptionWhenStockIsInsufficient() {
+    Sweet sweet = new Sweet("Peda", "Indian", 25.0, 1);
 
-        Exception exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> sweetService.purchaseSweet(sweet, 2)
-        );
+    when(sweetRepository.findById(1L))
+            .thenReturn(java.util.Optional.of(sweet));
 
-        assertEquals("Insufficient stock available", exception.getMessage());
-    }
+    Exception exception = assertThrows(
+            IllegalArgumentException.class,
+            () -> sweetService.purchaseSweet(1L, 2)
+    );
+
+    assertEquals("Insufficient stock available", exception.getMessage());
+}
+
 }

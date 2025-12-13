@@ -23,7 +23,13 @@ public class SweetService {
         return sweetRepository.findAll();
     }
 
-    public Sweet purchaseSweet(Sweet sweet, int quantity) {
+    public Sweet getSweetById(Long id) {
+        return sweetRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Sweet not found"));
+    }
+
+    public Sweet purchaseSweet(Long sweetId, int quantity) {
+        Sweet sweet = getSweetById(sweetId);
 
         if (sweet.getQuantityInStock() < quantity) {
             throw new IllegalArgumentException("Insufficient stock available");
@@ -38,4 +44,16 @@ public class SweetService {
 
         return sweetRepository.save(updatedSweet);
     }
+    public List<Sweet> searchByName(String name) {
+    return sweetRepository.findByNameContainingIgnoreCase(name);
+}
+
+public List<Sweet> searchByCategory(String category) {
+    return sweetRepository.findByCategoryIgnoreCase(category);
+}
+
+public List<Sweet> searchByPriceRange(double minPrice, double maxPrice) {
+    return sweetRepository.findByPriceBetween(minPrice, maxPrice);
+}
+
 }

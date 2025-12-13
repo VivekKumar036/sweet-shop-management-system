@@ -17,34 +17,40 @@ public class SweetController {
         this.sweetService = sweetService;
     }
 
-    // Add a new sweet
     @PostMapping
     public ResponseEntity<Sweet> addSweet(@RequestBody Sweet sweet) {
-        Sweet savedSweet = sweetService.addSweet(sweet);
-        return ResponseEntity.ok(savedSweet);
+        return ResponseEntity.ok(sweetService.addSweet(sweet));
     }
 
-    // Get all sweets
     @GetMapping
     public ResponseEntity<List<Sweet>> getAllSweets() {
         return ResponseEntity.ok(sweetService.getAllSweets());
     }
+    @GetMapping("/search/name")
+public ResponseEntity<List<Sweet>> searchByName(@RequestParam String name) {
+    return ResponseEntity.ok(sweetService.searchByName(name));
+}
 
-    // Purchase a sweet (reduce quantity)
+@GetMapping("/search/category")
+public ResponseEntity<List<Sweet>> searchByCategory(@RequestParam String category) {
+    return ResponseEntity.ok(sweetService.searchByCategory(category));
+}
+
+@GetMapping("/search/price")
+public ResponseEntity<List<Sweet>> searchByPriceRange(
+        @RequestParam double min,
+        @RequestParam double max
+) {
+    return ResponseEntity.ok(sweetService.searchByPriceRange(min, max));
+}
+
     @PostMapping("/{id}/purchase")
     public ResponseEntity<Sweet> purchaseSweet(
             @PathVariable Long id,
             @RequestParam int quantity
     ) {
-        // For now, we’ll assume sweet is already fetched (we’ll improve this next)
-        // This keeps things simple and readable
-        Sweet sweet = sweetService.getAllSweets()
-                .stream()
-                .filter(s -> s.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Sweet not found"));
-
-        Sweet updatedSweet = sweetService.purchaseSweet(sweet, quantity);
-        return ResponseEntity.ok(updatedSweet);
+        return ResponseEntity.ok(
+                sweetService.purchaseSweet(id, quantity)
+        );
     }
 }
