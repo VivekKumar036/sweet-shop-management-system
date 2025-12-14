@@ -11,5 +11,5 @@ public interface SweetRepository extends JpaRepository<Sweet, Long> {
 
     List<Sweet> findByCategoryIgnoreCase(String category);
 
-    List<Sweet> findByPriceBetween(double minPrice, double maxPrice);
+    List<Sweet> findByPriceBetween(double min, double max);
 }

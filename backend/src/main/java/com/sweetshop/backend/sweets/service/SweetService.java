@@ -15,6 +15,8 @@ public class SweetService {
         this.sweetRepository = sweetRepository;
     }
 
+    // ---------------- BASIC ----------------
+
     public Sweet addSweet(Sweet sweet) {
         return sweetRepository.save(sweet);
     }
@@ -28,6 +30,8 @@ public class SweetService {
                 .orElseThrow(() -> new IllegalArgumentException("Sweet not found"));
     }
 
+    // ---------------- PURCHASE ----------------
+
     public Sweet purchaseSweet(Long sweetId, int quantity) {
         Sweet sweet = getSweetById(sweetId);
 
@@ -35,25 +39,49 @@ public class SweetService {
             throw new IllegalArgumentException("Insufficient stock available");
         }
 
-        Sweet updatedSweet = new Sweet(
-                sweet.getName(),
-                sweet.getCategory(),
-                sweet.getPrice(),
+        // ✅ MODIFY EXISTING ENTITY
+        sweet.setQuantityInStock(
                 sweet.getQuantityInStock() - quantity
         );
 
-        return sweetRepository.save(updatedSweet);
+        return sweetRepository.save(sweet);
     }
+
+    // ---------------- ADMIN ----------------
+
+    public void deleteSweet(Long sweetId) {
+        if (!sweetRepository.existsById(sweetId)) {
+            throw new IllegalArgumentException("Sweet not found");
+        }
+        sweetRepository.deleteById(sweetId);
+    }
+
+    public Sweet restockSweet(Long sweetId, int quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Restock quantity must be positive");
+        }
+
+        Sweet sweet = getSweetById(sweetId);
+
+        // ✅ MODIFY EXISTING ENTITY
+        sweet.setQuantityInStock(
+                sweet.getQuantityInStock() + quantity
+        );
+
+        return sweetRepository.save(sweet);
+    }
+
+    // ---------------- SEARCH ----------------
+
     public List<Sweet> searchByName(String name) {
-    return sweetRepository.findByNameContainingIgnoreCase(name);
-}
+        return sweetRepository.findByNameContainingIgnoreCase(name);
+    }
 
-public List<Sweet> searchByCategory(String category) {
-    return sweetRepository.findByCategoryIgnoreCase(category);
-}
+    public List<Sweet> searchByCategory(String category) {
+        return sweetRepository.findByCategoryIgnoreCase(category);
+    }
 
-public List<Sweet> searchByPriceRange(double minPrice, double maxPrice) {
-    return sweetRepository.findByPriceBetween(minPrice, maxPrice);
-}
-
+    public List<Sweet> searchByPriceRange(double minPrice, double maxPrice) {
+        return sweetRepository.findByPriceBetween(minPrice, maxPrice);
+    }
 }

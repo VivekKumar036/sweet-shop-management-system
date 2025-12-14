@@ -1,0 +1,20 @@
+# Node
+frontend/node_modules
+frontend/build
+
+# Java
+backend/target
+backend/.classpath
+backend/.project
+backend/.settings
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env

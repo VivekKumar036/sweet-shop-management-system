@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/sweets")
+@CrossOrigin(origins = "http://localhost:3000")
 public class SweetController {
 
     private final SweetService sweetService;
@@ -21,6 +22,14 @@ public class SweetController {
     public ResponseEntity<Sweet> addSweet(@RequestBody Sweet sweet) {
         return ResponseEntity.ok(sweetService.addSweet(sweet));
     }
+    @PostMapping("/{id}/restock")
+public ResponseEntity<Sweet> restock(
+        @PathVariable Long id,
+        @RequestParam int quantity
+) {
+    return ResponseEntity.ok(sweetService.restockSweet(id, quantity));
+}
+
 
     @GetMapping
     public ResponseEntity<List<Sweet>> getAllSweets() {

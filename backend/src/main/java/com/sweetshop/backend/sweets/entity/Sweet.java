@@ -22,8 +22,8 @@ public class Sweet {
     @Column(nullable = false)
     private int quantityInStock;
 
+    // 🔹 Required by JPA
     public Sweet() {
-        // Required by JPA
     }
 
     public Sweet(String name, String category, double price, int quantityInStock) {
@@ -32,6 +32,8 @@ public class Sweet {
         this.price = price;
         this.quantityInStock = quantityInStock;
     }
+
+    // -------- GETTERS --------
 
     public Long getId() {
         return id;
@@ -51,5 +53,23 @@ public class Sweet {
 
     public int getQuantityInStock() {
         return quantityInStock;
+    }
+
+    // -------- SETTERS (CRITICAL) --------
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setQuantityInStock(int quantityInStock) {
+        this.quantityInStock = quantityInStock;
     }
 }
